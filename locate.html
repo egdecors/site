@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>InternetCafe | Services</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcj1TvAWyc1TYdqlS5NDxMyVu9GB8lOp0&sensor=true"></script>
+<script src="js/jquery-1.7.1.min.js"> </script>
+<script src="js/cufon-yui.js"></script>
+<script src="js/cufon-replace.js"></script>
+<script src="js/Vegur_500.font.js"></script>
+<script src="js/Ropa_Sans_400.font.js"></script>
+<script src="js/FF-cash.js"></script>
+<script src="js/script.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<link rel="stylesheet" href="css/ie.css" type="text/css" media="screen">
+<![endif]-->
+</head>
+<body id="page3">
+<!--==============================header=================================-->
+<header>
+  <div class="border-bot">
+    <div class="main">
+      <h1>
+		<a href="index.html">
+			<img src="images/logo_head.jpg"/>
+		</a>
+		</h1>
+      <nav>
+        <ul class="menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a class="active" href="locate.html">Locate Us</a></li>
+          <li><a href="contact.html">Contacts</a></li>
+        </ul>
+      </nav>
+      <div class="clear"></div>
+    </div>
+  </div>
+</header>
+<!--==============================content================================-->
+<div id="map"></div>
+<!--==============================footer=================================-->
+<footer>
+  <div class="main">
+    <div class="container_12">
+      <div class="wrapper">
+        <div class="grid_3">
+          <div class="spacer-1"> <a href="index.html"><img src="images/logo_footer.jpg" alt=""></a> </div>
+        </div>
+        <div class="grid_5">
+          <div class="indent-top2">
+            <p class="prev-indent-bot">&copy; 2012 All Kinds of interior designs by&nbsp<a target="_blank" href="http://www.egdeccors.com/">E.G Decors</a></p>
+            Phone: +91 90 47 015251 Email: <a href="#">egdecors@gmail.com</a> </div>
+        </div>
+        <div class="grid_4">
+          <ul class="list-services">
+            <li><a class="item-1" href="#"></a></li>
+            <li><a class="item-2" href="#"></a></li>
+            <li><a class="item-3" href="https://plus.google.com/102366383711065838809" rel="publisher"></a></li>
+            <li><a class="item-4" href="#"></a></li>
+          </ul>
+          <span class="footer-text">&copy; 2013 <a class="link color-2" href="#">Privacy Policy</a></span> </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>Cufon.now();</script>
+<script>
+	BGMap					= (function() {
+			var map,
+				$mapEl		= $('#map'),
+				address		= 'E.G Decors, Pondicherry',
+				lat			= 11.924625,
+				lng			= 79.808297,
+				display		= false,
+				source = new Object(),
+				directionsDisplay,
+				directionsService = new google.maps.DirectionsService(),
+				
+				showMap		= function() {
+					hideMap();
+					
+					display 		= true;
+					
+					if (navigator.geolocation)
+					{
+					navigator.geolocation.getCurrentPosition(showPosition);
+					}
+					else{x.innerHTML="Geolocation is not supported by this browser.";}
+					function showPosition(position)
+					{	
+						source.latitude = position.coords.latitude;
+						source.longitude =  position.coords.longitude;
+						directionsDisplay = new google.maps.DirectionsRenderer();
+						var sourcePoint = new google.maps.LatLng(source.latitude,source.longitude);
+						var destinationPoint = new google.maps.LatLng(lat,lng),
+					
+						mapOptions 	= {
+							zoom						: 18,
+							center						: sourcePoint,
+							mapTypeId					: google.maps.MapTypeId.ROADMAP,
+							mapTypeControl				: false,
+							panControl					: true,
+							panControlOptions			: {
+								position	: google.maps.ControlPosition.TOP_RIGHT
+							},
+							zoomControl					: true,
+							zoomControlOptions			: {
+								style		: google.maps.ZoomControlStyle.SMALL,
+								position	: google.maps.ControlPosition.TOP_RIGHT
+							},
+							streetViewControl			: true,
+							streetViewControlOptions	: {
+								position	: google.maps.ControlPosition.TOP_RIGHT
+							}
+						};
+					
+						map = new google.maps.Map(document.getElementById("map"), mapOptions);
+						directionsDisplay.setMap(map);
+					//rotate 45 degrees (nicer view!)
+					//map.setTilt(45);
+					
+						var request = {
+								  origin: sourcePoint,
+								  destination: destinationPoint,
+								  travelMode: google.maps.TravelMode.DRIVING
+							  };
+							  directionsService.route(request, function(response, status) {
+								if (status == google.maps.DirectionsStatus.OK) {
+								debugger;
+								  directionsDisplay.setDirections(response);
+								  var coordInfoWindow = new google.maps.InfoWindow({maxWidth : 150}),   
+									latlngStr 		= "You are just " + response.routes[0].legs[0].distance.text + " from E.G. Decors.";
+								
+								coordInfoWindow.setContent(latlngStr);    
+								coordInfoWindow.setPosition(sourcePoint);    
+								coordInfoWindow.open(map);
+								}
+							  });
+					
+						resizeMap();
+					
+					
+					
+					}
+					
+					
+					//BGImageController.fadeBG(false);
+				},
+				resizeMap	= function() {
+					$mapEl.css({
+						width	: $(window).width() + 'px',
+						height	: $(window).height() + 'px'
+					});
+				},
+				hideMap		= function() {
+					display = false;
+					$mapEl.empty();
+				},
+				active		= function() {
+					return display;
+				};
+				
+			return {
+				showMap		: showMap,
+				hideMap		: hideMap,
+				active		: active,
+				resizeMap	: resizeMap
+			};
+		})();
+
+$(document).ready(function() {
+	BGMap.showMap()});
+
+</script>
+</body>
+</html>
